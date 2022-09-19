@@ -23,6 +23,7 @@ class NetworkManager: NetworkManagerProtocol {
 
     typealias DepartmentResult = Result<DepartmentIDs, NetworkError>
 
+    //MARK: Retrieve Department IDs (first called
     func retrieveDepartmentIDs(completion: @escaping (DepartmentResult) -> Void) {
         guard let departmentIDUrl = URL(string: "https://collectionapi.metmuseum.org/public/collection/v1/departments") else {
             completion(.failure(.invalidDepartmentUrl))

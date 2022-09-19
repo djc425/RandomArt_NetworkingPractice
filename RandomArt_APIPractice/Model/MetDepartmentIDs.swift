@@ -18,18 +18,7 @@ struct PickerModel {
     let departmentNameForPicker: String
 }
 
-// we load these first to give the user the option of choosing which department they want to search
-struct DepartmentIDs: Codable {
-    var departments: [Departments]
-}
-
-struct Departments: Codable {
-    let departmentId: Int
-    let displayName: String
-}
-
 class MetDepartmentIDViewModel {
-    var error: NetworkError?
 
     var networkManager = NetworkManager.shared
 
