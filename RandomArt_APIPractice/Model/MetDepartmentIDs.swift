@@ -20,18 +20,25 @@ struct PickerModel {
 
 class MetDepartmentIDViewModel {
 
-    var networkManager = NetworkManager.shared
+    var clientProtocol: NetworkManagerProtocol
+
+    init(networkProtocol: NetworkManagerProtocol) {
+        self.clientProtocol = networkProtocol
+    }
+
+    var pickerModels = [PickerModel]()
 
     weak var delegate: MetDepartmentIDViewModelDelegate?
 
     func loadDepartmentIDs() {
-        networkManager.retrieveDepartmentIDs { result in
+        clientProtocol.retrieveDepartmentIDs { result in
             switch result {
 
             case .failure(let error):
                 self.delegate?.handleError(error: error)
             case .success(let departmentIDs):
-               let pickerModel = self.networkManager.parseDepartmentIDs(from: departmentIDs)
+               let pickerModel = self.clientProtocol.parseDepartmentIDs(from: departmentIDs)
+  
                 self.delegate?.updatePicker(with: pickerModel)
             }
         }

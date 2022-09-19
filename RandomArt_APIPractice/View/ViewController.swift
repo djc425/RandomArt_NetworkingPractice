@@ -11,7 +11,7 @@ class ViewController: UIViewController {
 
     let mainView = MainView()
 
-    var metDepartmentIDViewModel = MetDepartmentIDViewModel()
+    var metDepartmentIDViewModel: MetDepartmentIDViewModel
 
     var pickerModels: [PickerModel] = []
 
@@ -24,12 +24,21 @@ class ViewController: UIViewController {
         mainView.pickerView.dataSource = self
         mainView.randomBttn.addTarget(self, action: #selector(randomBttnPressed), for: .touchUpInside)
 
-        metDepartmentIDViewModel.delegate = self
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         metDepartmentIDViewModel.loadDepartmentIDs()
+    }
+
+    init(model: MetDepartmentIDViewModel) {
+        self.metDepartmentIDViewModel = model
+        super.init(nibName: nil, bundle: nil)
+        self.metDepartmentIDViewModel.delegate = self
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     @objc func randomBttnPressed(){
