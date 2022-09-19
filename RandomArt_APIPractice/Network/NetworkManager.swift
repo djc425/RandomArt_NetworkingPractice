@@ -15,12 +15,12 @@ enum NetworkError: String, Error {
 
 protocol NetworkManagerProtocol: AnyObject {
     func retrieveDepartmentIDs(completion: @escaping (Result<DepartmentIDs, NetworkError>) -> Void)
+    func parseDepartmentIDs(from departmentData: DepartmentIDs) -> [PickerModel]
 }
 
 class NetworkManager: NetworkManagerProtocol {
 
-    static let shared = NetworkManager()
-
+    // type Alias for the department Result type
     typealias DepartmentResult = Result<DepartmentIDs, NetworkError>
 
     //MARK: Retrieve Department IDs (first called
@@ -34,7 +34,7 @@ class NetworkManager: NetworkManagerProtocol {
 
         let task = session.dataTask(with: request) { data, _, error in
 
-            if let error = error {
+            if error != nil {
                 completion(.failure(.couldNotFetchDepartments))
             }
 
@@ -58,6 +58,7 @@ class NetworkManager: NetworkManagerProtocol {
     //TODO: write method to parse departmentIDS, maybe use generics so the function can be reused
 }
 
+//MARK: ParseMethod for departmentIDs
 extension NetworkManager {
     func parseDepartmentIDs(from departmentData: DepartmentIDs) -> [PickerModel] {
         var pickerArray = [PickerModel]()
