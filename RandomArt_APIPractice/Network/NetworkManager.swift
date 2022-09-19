@@ -34,7 +34,7 @@ class NetworkManager: NetworkManagerProtocol {
 
         let task = session.dataTask(with: request) { data, _, error in
 
-            if let error = error {
+            if error != nil {
                 completion(.failure(.couldNotFetchDepartments))
             }
 

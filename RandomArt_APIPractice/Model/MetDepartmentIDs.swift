@@ -26,8 +26,6 @@ class MetDepartmentIDViewModel {
         self.clientProtocol = networkProtocol
     }
 
-    var pickerModels = [PickerModel]()
-
     weak var delegate: MetDepartmentIDViewModelDelegate?
 
     func loadDepartmentIDs() {
@@ -38,7 +36,6 @@ class MetDepartmentIDViewModel {
                 self.delegate?.handleError(error: error)
             case .success(let departmentIDs):
                let pickerModel = self.clientProtocol.parseDepartmentIDs(from: departmentIDs)
-  
                 self.delegate?.updatePicker(with: pickerModel)
             }
         }
