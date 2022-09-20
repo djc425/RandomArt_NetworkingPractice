@@ -16,3 +16,9 @@ struct Departments: Codable {
     let departmentId: Int
     let displayName: String
 }
+
+// model for our Picker to put parsed data into
+struct PickerModel {
+    let departmentIDForPicker: Int
+    let departmentNameForPicker: String
+}

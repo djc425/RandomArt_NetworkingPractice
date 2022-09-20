@@ -13,11 +13,6 @@ protocol MetDepartmentIDViewModelDelegate: AnyObject {
     func handleError(error: NetworkError)
 }
 
-struct PickerModel {
-    let departmentIDForPicker: Int
-    let departmentNameForPicker: String
-}
-
 class MetDepartmentIDViewModel {
 
     var clientProtocol: NetworkManagerProtocol

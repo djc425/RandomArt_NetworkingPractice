@@ -42,7 +42,7 @@ class ViewController: UIViewController {
     }
 
     @objc func randomBttnPressed(){
-        print(departmentIDForURL)
+        metDepartmentIDViewModel.
     }
 
 }
