@@ -14,8 +14,15 @@ struct ObjectID: Codable {
 }
 
 struct ArtFromObject: Codable {
-    
+    var primaryImage: String
+    var primaryImageSmall: String
+    var objectName: String
+    var title: String
+    var artistDisplayName: String
+    var artistRole: String
 }
+
+
 
 
 

@@ -6,35 +6,26 @@
 //
 
 import Foundation
+import UIKit
 
-enum NetworkError: String, Error {
-    case invalidDepartmentUrl = "Invalid URL for department look up"
-    case couldNotFetchDepartments = "unable to load departments"
-    case couldNotGenerateDepartmentData = "unable to get departments"
-}
+// type Alias for the department Result type
+typealias DepartmentResult = Result<DepartmentIDs, NetworkError>
 
-enum ObjectError: String, Error {
-    case invalidObjectURL = "Invalid URL for object look up"
-    case couldNotFetchObjectIDs = "unable to load objects"
-    case couldNotGenerateObjectIDtData = "unable to get object ID"
+typealias ObjectResult = Result<ObjectID, ObjectError>
 
-}
+typealias ArtResult = Result<ArtFromObject, ArtistError>
+
 
 protocol NetworkManagerProtocol: AnyObject {
-    func retrieveDepartmentIDs(completion: @escaping (Result<DepartmentIDs, NetworkError>) -> Void)
+    func retrieveDepartmentIDs(completion: @escaping (DepartmentResult) -> Void)
     func parseDepartmentIDs(from departmentData: DepartmentIDs) -> [PickerModel]
 
-    func retrieveObjectIDs(objectID: Int, completion: @escaping (Result<ObjectID, ObjectError>) -> Void)
+    func retrieveObjectIDs(objectID: Int, completion: @escaping (ObjectResult) -> Void)
+
+    func retrieveArt(usingObjectID: Int, completion: @escaping (ArtResult) -> Void)
 }
 
 class NetworkManager: NetworkManagerProtocol {
-
-    // type Alias for the department Result type
-    typealias DepartmentResult = Result<DepartmentIDs, NetworkError>
-
-    typealias ObjectResult = Result<ObjectID, ObjectError>
-
-   // typealias ArtResult = Result<>
 
     //MARK: Retrieve Department IDs (first called
     func retrieveDepartmentIDs(completion: @escaping (DepartmentResult) -> Void) {
@@ -102,10 +93,38 @@ class NetworkManager: NetworkManagerProtocol {
     }
 
 
-   /* func retrieveArt(usingObjectID: Int, completion: ){
-        guard let url = URL(string: "https://collectionapi.metmuseum.org/public/collection/v1/search?departmentId=6&hasImages=true&q=cat")
+    func retrieveArt(usingObjectID: Int, completion: @escaping (ArtResult) -> Void){
+        guard let artUrl = URL(string: "https://collectionapi.metmuseum.org/public/collection/v1/objects/\(usingObjectID)") else {
+            completion(.failure(.couldNotGenerateArtData))
+            return
+        }
+
+        let session = URLSession(configuration: .default)
+        let request = URLRequest(url: artUrl)
+
+        let task = session.dataTask(with: request) { data, _, error in
+
+            if error != nil {
+                completion(.failure(.couldNotFetchArt))
+            }
+
+            guard let data = data else {
+                completion(.failure(.couldNotGenerateArtData))
+                return
+            }
+
+            do {
+                let decoder = JSONDecoder()
+                let artData = try decoder.decode(ArtFromObject.self, from: data)
+
+                completion(.success(artData))
+            } catch {
+                completion(.failure(.couldNotGenerateArtData))
+            }
+        }
+        task.resume()
     }
-        */
+
 }
 
 //MARK: ParseMethod for departmentIDs

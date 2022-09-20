@@ -8,13 +8,21 @@
 import Foundation
 
 protocol MetDepartmentIDViewModelDelegate: AnyObject {
+
+    // will look to refactor with Generics
     func updatePicker(with departmentIDs: [PickerModel])
 
     func updateObjectIds(with object: ObjectID)
 
+    func updateUIWithArt(with art: ArtFromObject)
+
+    // errors but we can probably consolidate this with generics
     func handleNetworkError(error: NetworkError)
 
     func handleObjectError(error: ObjectError)
+
+    func handleArtError(error: ArtistError)
+
 }
 
 class MetDepartmentIDViewModel {
@@ -26,6 +34,8 @@ class MetDepartmentIDViewModel {
     }
 
     var objectID: Int = 0
+
+    var artID: Int = 0
 
     weak var delegate: MetDepartmentIDViewModelDelegate?
 
@@ -51,6 +61,18 @@ class MetDepartmentIDViewModel {
             case .success(let objectIDs):
                 self.delegate?.updateObjectIds(with: objectIDs)
                 
+            }
+        }
+    }
+
+    func loadArt(){
+        clientProtocol.retrieveArt(usingObjectID: artID) { result in
+
+            switch result {
+            case .failure(let error):
+                self.delegate?.handleArtError(error: error)
+            case .success(let artObjects):
+                self.delegate?.updateUIWithArt(with: artObjects)
             }
         }
     }
