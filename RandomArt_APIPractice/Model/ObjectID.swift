@@ -13,6 +13,10 @@ struct ObjectID: Codable {
     var objectIDs: [Int]
 }
 
+struct ArtFromObject: Codable {
+    
+}
+
 
 
 

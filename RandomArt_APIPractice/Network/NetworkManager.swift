@@ -34,6 +34,8 @@ class NetworkManager: NetworkManagerProtocol {
 
     typealias ObjectResult = Result<ObjectID, ObjectError>
 
+   // typealias ArtResult = Result<>
+
     //MARK: Retrieve Department IDs (first called
     func retrieveDepartmentIDs(completion: @escaping (DepartmentResult) -> Void) {
         guard let departmentIDUrl = URL(string: "https://collectionapi.metmuseum.org/public/collection/v1/departments") else {
@@ -68,7 +70,7 @@ class NetworkManager: NetworkManagerProtocol {
 
     // MARK: Retrieve ObjectIDs that we will then use to call a random object
     func retrieveObjectIDs(objectID: Int, completion: @escaping (ObjectResult) -> Void) {
-        guard let objectIDURL = URL(string: "https://collectionapi.metmuseum.org/public/collection/v1/search?departmentId=\(objectID)&q=cat") else {
+        guard let objectIDURL = URL(string: "https://collectionapi.metmuseum.org/public/collection/v1/search?departmentIds=\(objectID)&isHighlight=true&q=cat") else {
             completion(.failure(.invalidObjectURL))
             return
         }
@@ -99,6 +101,11 @@ class NetworkManager: NetworkManagerProtocol {
         task.resume()
     }
 
+
+   /* func retrieveArt(usingObjectID: Int, completion: ){
+        guard let url = URL(string: "https://collectionapi.metmuseum.org/public/collection/v1/search?departmentId=6&hasImages=true&q=cat")
+    }
+        */
 }
 
 //MARK: ParseMethod for departmentIDs

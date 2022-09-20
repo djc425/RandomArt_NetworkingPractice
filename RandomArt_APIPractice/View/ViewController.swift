@@ -44,7 +44,6 @@ class ViewController: UIViewController {
         } else {
             metDepartmentIDViewModel.loadObjectIDs()
         }
-
     }
 
 }
@@ -63,7 +62,7 @@ extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-       // departmentIDForURL = pickerModels[row].departmentIDForPicker
+       print(pickerModels[row].departmentIDForPicker)
         metDepartmentIDViewModel.objectID = pickerModels[row].departmentIDForPicker
     }
 }
@@ -95,7 +94,7 @@ extension ViewController: MetDepartmentIDViewModelDelegate {
 
     func updateObjectIds(with object: ObjectID) {
         DispatchQueue.main.async {
-            print(object.objectIDs.count)
+            print(object.objectIDs.randomElement())
         }
     }
 }
