@@ -17,12 +17,15 @@ typealias ArtResult = Result<ArtFromObject, ArtistError>
 
 
 protocol NetworkManagerProtocol: AnyObject {
+    // initial Department Method
     func retrieveDepartmentIDs(completion: @escaping (DepartmentResult) -> Void)
     func parseDepartmentIDs(from departmentData: DepartmentIDs) -> [PickerModel]
 
     func retrieveObjectIDs(objectID: Int, completion: @escaping (ObjectResult) -> Void)
 
     func retrieveArt(usingObjectID: Int, completion: @escaping (ArtResult) -> Void)
+    func parseArtData(from art: ArtFromObject) -> ArtModel
+
 }
 
 class NetworkManager: NetworkManagerProtocol {
@@ -142,5 +145,19 @@ extension NetworkManager {
         }
         return pickerArray
     }
+
+    func parseArtData(from art: ArtFromObject) -> ArtModel {
+
+        let name = art.artistDisplayName
+        let image = art.primaryImage
+        let title = art.title
+
+        let artModel = ArtModel(artistName: name, heroImage: image, titleOfPiece: title)
+
+        return artModel
+    }
 }
+
+
+
 

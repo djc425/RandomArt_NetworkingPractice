@@ -106,8 +106,10 @@ extension ViewController: MetDepartmentIDViewModelDelegate {
 
     //MARK: Updating the Art
     // final methods we call after the final API call
-    func updateUIWithArt(with art: ArtFromObject) {
-        print("Success")
+    func updateUIWithArt(with art: ArtModel) {
+        DispatchQueue.main.async {
+            //TODO: insert final methods to update the UIimageView and add some labels for title and artist
+        }
     }
 
     func handleArtError(error: ArtistError) {

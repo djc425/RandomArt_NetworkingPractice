@@ -22,6 +22,12 @@ struct ArtFromObject: Codable {
     var artistRole: String
 }
 
+struct ArtModel {
+    var artistName: String
+    var heroImage: String
+    var titleOfPiece: String
+}
+
 
 
 
