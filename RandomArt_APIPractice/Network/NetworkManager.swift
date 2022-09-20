@@ -23,6 +23,8 @@ enum ObjectError: String, Error {
 protocol NetworkManagerProtocol: AnyObject {
     func retrieveDepartmentIDs(completion: @escaping (Result<DepartmentIDs, NetworkError>) -> Void)
     func parseDepartmentIDs(from departmentData: DepartmentIDs) -> [PickerModel]
+
+    func retrieveObjectIDs(objectID: Int, completion: @escaping (Result<ObjectID, ObjectError>) -> Void)
 }
 
 class NetworkManager: NetworkManagerProtocol {
@@ -64,6 +66,7 @@ class NetworkManager: NetworkManagerProtocol {
         task.resume()
     }
 
+    // MARK: Retrieve ObjectIDs that we will then use to call a random object
     func retrieveObjectIDs(objectID: Int, completion: @escaping (ObjectResult) -> Void) {
         guard let objectIDURL = URL(string: "https://collectionapi.metmuseum.org/public/collection/v1/search?departmentId=\(objectID)&q=cat") else {
             completion(.failure(.invalidObjectURL))
@@ -98,9 +101,6 @@ class NetworkManager: NetworkManagerProtocol {
 
 }
 
-    //TODO: write method to parse departmentIDS, maybe use generics so the function can be reused
-
-
 //MARK: ParseMethod for departmentIDs
 extension NetworkManager {
     func parseDepartmentIDs(from departmentData: DepartmentIDs) -> [PickerModel] {
@@ -115,7 +115,6 @@ extension NetworkManager {
             pickerArray.append(pickerModel)
         }
         return pickerArray
-
     }
 }
 

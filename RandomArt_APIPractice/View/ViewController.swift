@@ -15,9 +15,6 @@ class ViewController: UIViewController {
 
     var pickerModels: [PickerModel] = []
 
-    var departmentIDForURL: Int = 0
-
-
     override func viewDidLoad() {
         super.viewDidLoad()
         mainView.pickerView.delegate = self
@@ -42,11 +39,16 @@ class ViewController: UIViewController {
     }
 
     @objc func randomBttnPressed(){
-        metDepartmentIDViewModel.
+        if metDepartmentIDViewModel.objectID == 0 {
+            print("change dat")
+        } else {
+            metDepartmentIDViewModel.loadObjectIDs()
+        }
+
     }
 
 }
-
+//MARK: UIPickerDelegate and DataSource methods
 extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -61,13 +63,15 @@ extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        departmentIDForURL = pickerModels[row].departmentIDForPicker
+       // departmentIDForURL = pickerModels[row].departmentIDForPicker
+        metDepartmentIDViewModel.objectID = pickerModels[row].departmentIDForPicker
     }
 }
 
 //MARK: MetDepartmentViewModelDelegate
 //here we pass in the picker model we parsed from the department call to generate our picker info
 extension ViewController: MetDepartmentIDViewModelDelegate {
+
     func updatePicker(with departmentIDs: [PickerModel]) {
         DispatchQueue.main.async {
             self.pickerModels = departmentIDs
@@ -75,8 +79,24 @@ extension ViewController: MetDepartmentIDViewModelDelegate {
         }
     }
 
-    func handleError(error: NetworkError) {
-        errorAlert(error: error.rawValue)
+    func handleNetworkError(error: NetworkError) {
+        DispatchQueue.main.async {
+            self.errorAlert(error: error.rawValue)
+        }
+
+    }
+
+    //MARK: the ObjectID methods
+    func handleObjectError(error: ObjectError) {
+        DispatchQueue.main.async {
+            self.errorAlert(error: error.rawValue)
+        }
+    }
+
+    func updateObjectIds(with object: ObjectID) {
+        DispatchQueue.main.async {
+            print(object.objectIDs.count)
+        }
     }
 }
 

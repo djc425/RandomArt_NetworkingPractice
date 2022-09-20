@@ -10,7 +10,11 @@ import Foundation
 protocol MetDepartmentIDViewModelDelegate: AnyObject {
     func updatePicker(with departmentIDs: [PickerModel])
 
-    func handleError(error: NetworkError)
+    func updateObjectIds(with object: ObjectID)
+
+    func handleNetworkError(error: NetworkError)
+
+    func handleObjectError(error: ObjectError)
 }
 
 class MetDepartmentIDViewModel {
@@ -21,6 +25,8 @@ class MetDepartmentIDViewModel {
         self.clientProtocol = networkProtocol
     }
 
+    var objectID: Int = 0
+
     weak var delegate: MetDepartmentIDViewModelDelegate?
 
     func loadDepartmentIDs() {
@@ -28,10 +34,23 @@ class MetDepartmentIDViewModel {
             switch result {
 
             case .failure(let error):
-                self.delegate?.handleError(error: error)
+                self.delegate?.handleNetworkError(error: error)
             case .success(let departmentIDs):
                let pickerModel = self.clientProtocol.parseDepartmentIDs(from: departmentIDs)
                 self.delegate?.updatePicker(with: pickerModel)
+            }
+        }
+    }
+
+    func loadObjectIDs(){
+        clientProtocol.retrieveObjectIDs(objectID: objectID) { result in
+
+            switch result {
+            case .failure(let error):
+                self.delegate?.handleObjectError(error: error)
+            case .success(let objectIDs):
+                self.delegate?.updateObjectIds(with: objectIDs)
+                
             }
         }
     }
