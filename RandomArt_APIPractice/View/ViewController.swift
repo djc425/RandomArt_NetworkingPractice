@@ -15,9 +15,6 @@ class ViewController: UIViewController {
 
     var pickerModels: [PickerModel] = []
 
-    var departmentIDForURL: Int = 0
-
-
     override func viewDidLoad() {
         super.viewDidLoad()
         mainView.pickerView.delegate = self
@@ -42,11 +39,11 @@ class ViewController: UIViewController {
     }
 
     @objc func randomBttnPressed(){
-        metDepartmentIDViewModel.
+        metDepartmentIDViewModel.loadArt()
     }
 
 }
-
+//MARK: UIPickerDelegate and DataSource methods
 extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -60,14 +57,23 @@ extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
         return pickerModels[row].departmentNameForPicker
     }
 
+    //maybe we generate the object IDS each time we select a row
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        departmentIDForURL = pickerModels[row].departmentIDForPicker
+       print(pickerModels[row].departmentIDForPicker)
+        metDepartmentIDViewModel.objectID = pickerModels[row].departmentIDForPicker
+        if metDepartmentIDViewModel.objectID == 0 {
+            print("change dat")
+        } else {
+            metDepartmentIDViewModel.loadObjectIDs()
+        }
     }
 }
 
 //MARK: MetDepartmentViewModelDelegate
 //here we pass in the picker model we parsed from the department call to generate our picker info
 extension ViewController: MetDepartmentIDViewModelDelegate {
+
+    //updating our PickerModel and reloading the UIPickerView
     func updatePicker(with departmentIDs: [PickerModel]) {
         DispatchQueue.main.async {
             self.pickerModels = departmentIDs
@@ -75,8 +81,39 @@ extension ViewController: MetDepartmentIDViewModelDelegate {
         }
     }
 
-    func handleError(error: NetworkError) {
-        errorAlert(error: error.rawValue)
+    func handleNetworkError(error: NetworkError) {
+        DispatchQueue.main.async {
+            self.errorAlert(error: error.rawValue)
+        }
+    }
+
+    // we'll unwrap and save back to the viewModel to use to generate the art
+    func updateObjectIds(with object: ObjectID) {
+        if let artID = object.objectIDs.randomElement() {
+            metDepartmentIDViewModel.artID = artID
+
+        } else {
+            errorAlert(error: "Could not generate ID")
+        }
+    }
+
+    //MARK: the ObjectID methods
+    func handleObjectError(error: ObjectError) {
+        DispatchQueue.main.async {
+            self.errorAlert(error: error.rawValue)
+        }
+    }
+
+    //MARK: Updating the Art
+    // final methods we call after the final API call
+    func updateUIWithArt(with art: ArtFromObject) {
+        print("Success")
+    }
+
+    func handleArtError(error: ArtistError) {
+        DispatchQueue.main.async {
+            self.errorAlert(error: error.rawValue)
+        }
     }
 }
 
