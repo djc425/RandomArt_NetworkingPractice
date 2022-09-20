@@ -14,7 +14,7 @@ protocol MetDepartmentIDViewModelDelegate: AnyObject {
 
     func updateObjectIds(with object: ObjectID)
 
-    func updateUIWithArt(with art: ArtFromObject)
+    func updateUIWithArt(with art: ArtModel)
 
     // errors but we can probably consolidate this with generics
     func handleNetworkError(error: NetworkError)
@@ -72,7 +72,8 @@ class MetDepartmentIDViewModel {
             case .failure(let error):
                 self.delegate?.handleArtError(error: error)
             case .success(let artObjects):
-                self.delegate?.updateUIWithArt(with: artObjects)
+                let finalArt = self.clientProtocol.parseArtData(from: artObjects)
+                self.delegate?.updateUIWithArt(with: finalArt)
             }
         }
     }
