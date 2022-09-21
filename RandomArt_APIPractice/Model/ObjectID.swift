@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 
 // we use this to generate the url for a specific object, this is used once we have a department ID
@@ -24,7 +25,7 @@ struct ArtFromObject: Codable {
 
 struct ArtModel {
     var artistName: String
-    var heroImage: String
+    var heroImage: UIImage
     var titleOfPiece: String
 }
 
