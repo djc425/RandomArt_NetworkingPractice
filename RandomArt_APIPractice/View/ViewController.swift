@@ -72,18 +72,18 @@ extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
 //MARK: MetDepartmentViewModelDelegate
 //here we pass in the picker model we parsed from the department call to generate our picker info
 extension ViewController: MetDepartmentIDViewModelDelegate {
+    func handleNetworkError(error: NetworkError) {
+        DispatchQueue.main.async {
+            self.errorAlert(error: error.rawValue)
+        }
+    }
+
 
     //updating our PickerModel and reloading the UIPickerView
     func updatePicker(with departmentIDs: [PickerModel]) {
         DispatchQueue.main.async {
             self.pickerModels = departmentIDs
             self.mainView.pickerView.reloadAllComponents()
-        }
-    }
-
-    func handleNetworkError(error: NetworkError) {
-        DispatchQueue.main.async {
-            self.errorAlert(error: error.rawValue)
         }
     }
 
@@ -109,6 +109,8 @@ extension ViewController: MetDepartmentIDViewModelDelegate {
     func updateUIWithArt(with art: ArtModel) {
         DispatchQueue.main.async {
             //TODO: insert final methods to update the UIimageView and add some labels for title and artist
+            self.mainView.artInfo = art
+            
         }
     }
 

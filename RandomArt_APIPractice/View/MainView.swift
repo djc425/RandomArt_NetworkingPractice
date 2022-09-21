@@ -7,15 +7,14 @@
 
 import UIKit
 
-struct MetModel {
-    let image: UIImage
-}
+
 
 class MainView: UIView {
 
-    var artInfo: MetModel? {
+    //TODO: Add in properties to update a label for the artist and the other artmodel property
+    var artInfo: ArtModel? {
         didSet {
-            heroImageView.image = artInfo?.image
+            heroImageView.image = artInfo?.heroImage
         }
     }
     
@@ -94,12 +93,25 @@ class MainView: UIView {
 
             randomBttn.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             randomBttn.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 220)
-
-
         ])
-
     }
-
-
-
 }
+
+extension UIImage {
+    func load(urlString : String) -> UIImage? {
+        guard let url = URL(string: urlString)else {
+            return nil
+        }
+
+        if let data = try? Data(contentsOf: url) {
+            if let image = UIImage(data: data) {
+                     return image
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+}
+

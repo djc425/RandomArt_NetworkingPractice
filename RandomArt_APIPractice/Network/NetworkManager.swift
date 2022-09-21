@@ -149,14 +149,15 @@ extension NetworkManager {
     func parseArtData(from art: ArtFromObject) -> ArtModel {
 
         let name = art.artistDisplayName
-        let image = art.primaryImage
+        //TODO: Unwrap that safely 
+        let image = UIImage().load(urlString: art.primaryImage)!
         let title = art.title
 
         let artModel = ArtModel(artistName: name, heroImage: image, titleOfPiece: title)
 
         return artModel
+        }
     }
-}
 
 
 
