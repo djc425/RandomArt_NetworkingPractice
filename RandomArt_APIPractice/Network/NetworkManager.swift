@@ -36,6 +36,8 @@ class NetworkManager: NetworkManagerProtocol {
             completion(.failure(.invalidDepartmentUrl))
             return
         }
+        print(departmentIDUrl)
+
         let session = URLSession(configuration: .default)
         let request = URLRequest(url: departmentIDUrl)
 
@@ -64,10 +66,11 @@ class NetworkManager: NetworkManagerProtocol {
 
     // MARK: Retrieve ObjectIDs that we will then use to call a random object
     func retrieveObjectIDs(objectID: Int, completion: @escaping (ObjectResult) -> Void) {
-        guard let objectIDURL = URL(string: "https://collectionapi.metmuseum.org/public/collection/v1/search?departmentIds=\(objectID)&isHighlight=true&q=cat") else {
+        guard let objectIDURL = URL(string: "https://collectionapi.metmuseum.org/public/collection/v1/search?departmentIds=\(objectID)&hasImages=true&q=cat") else {
             completion(.failure(.invalidObjectURL))
             return
         }
+        print(objectIDURL)
 
         let session = URLSession(configuration: .default)
         let request = URLRequest(url: objectIDURL)
@@ -101,6 +104,8 @@ class NetworkManager: NetworkManagerProtocol {
             completion(.failure(.couldNotGenerateArtData))
             return
         }
+
+        print(artUrl)
 
         let session = URLSession(configuration: .default)
         let request = URLRequest(url: artUrl)
@@ -148,12 +153,24 @@ extension NetworkManager {
 
     func parseArtData(from art: ArtFromObject) -> ArtModel {
 
+        // TODO: add in conditional to display a message if there is no artist name supplied
         let name = art.artistDisplayName
-        //TODO: Unwrap that safely 
-        let image = UIImage().load(urlString: art.primaryImage)!
-        let title = art.title
+        
+        //TODO: Unwrap this safely
 
-        let artModel = ArtModel(artistName: name, heroImage: image, titleOfPiece: title)
+        var imageForModel = UIImage()
+
+        let imageString = art.primaryImage
+
+        if imageString != "" {
+             imageForModel = UIImage().load(urlString: imageString)!
+        } else {
+             imageForModel = UIImage(systemName: "photo.artframe")!
+        }
+
+
+        let title = art.title
+        let artModel = ArtModel(artistName: name, heroImage: imageForModel, titleOfPiece: title)
 
         return artModel
         }

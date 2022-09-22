@@ -25,7 +25,7 @@ struct ArtFromObject: Codable {
 
 struct ArtModel {
     var artistName: String
-    var heroImage: UIImage
+    var heroImage: UIImage?
     var titleOfPiece: String
 }
 
