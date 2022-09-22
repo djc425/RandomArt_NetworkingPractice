@@ -15,21 +15,39 @@ class MainView: UIView {
     var artInfo: ArtModel? {
         didSet {
             heroImageView.image = artInfo?.heroImage
+            artistLabel.text = artInfo?.artistName
+            titleLabel.text = artInfo?.titleOfPiece
         }
     }
     
     let heroImageView: UIImageView = {
         let imgView =  UIImageView()
-        imgView.backgroundColor = .blue
+        //imgView.backgroundColor = .blue
         imgView.clipsToBounds = true
-        imgView.contentMode = .scaleAspectFill
+        imgView.contentMode = .scaleAspectFit
+        imgView.layer.cornerRadius = 20
+        imgView.layer.masksToBounds = true
         imgView.translatesAutoresizingMaskIntoConstraints = false
 
         return imgView
     }()
 
-    let dateLabel: UILabel = {
+    let artistLabel: UILabel = {
         let lbl = UILabel()
+        lbl.textColor = .black
+        lbl.textAlignment = .left
+        lbl.font = UIFont(name: "futura", size: 12)
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+
+        return lbl
+    }()
+
+    let titleLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.textColor = .black
+        lbl.textAlignment = .left
+        lbl.font = UIFont(name: "futura", size: 14)
+        lbl.translatesAutoresizingMaskIntoConstraints = false
 
         return lbl
     }()
@@ -40,12 +58,6 @@ class MainView: UIView {
         picker.translatesAutoresizingMaskIntoConstraints = false
         picker.backgroundColor = .clear
         return picker
-    }()
-
-    let heroImageLabel: UILabel = {
-        let lbl = UILabel()
-
-        return lbl
     }()
 
     var randomBttn: UIButton = {
@@ -71,20 +83,29 @@ class MainView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-   private func configure(){
+    private func configure(){
         self.translatesAutoresizingMaskIntoConstraints = false
 
         self.addSubview(heroImageView)
         self.addSubview(pickerView)
         self.addSubview(randomBttn)
-
+        self.addSubview(artistLabel)
+        self.addSubview(titleLabel)
 
         NSLayoutConstraint.activate([
 
             heroImageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            heroImageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.6),
+            heroImageView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.9),
             heroImageView.heightAnchor.constraint(equalTo: heroImageView.widthAnchor),
-            heroImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 70),
+            heroImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
+
+            titleLabel.trailingAnchor.constraint(equalTo: heroImageView.trailingAnchor),
+            titleLabel.topAnchor.constraint(equalTo: heroImageView.bottomAnchor, constant: 10),
+            titleLabel.widthAnchor.constraint(equalTo: heroImageView.widthAnchor),
+
+            artistLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
+            artistLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
+            artistLabel.widthAnchor.constraint(equalTo: titleLabel.widthAnchor),
 
             pickerView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             pickerView.widthAnchor.constraint(equalTo: self.widthAnchor),
@@ -92,9 +113,9 @@ class MainView: UIView {
             pickerView.topAnchor.constraint(equalTo: heroImageView.bottomAnchor, constant: 50),
 
             randomBttn.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            randomBttn.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 220)
+            randomBttn.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -40)
         ])
-    }
+   }
 }
 
 extension UIImage {

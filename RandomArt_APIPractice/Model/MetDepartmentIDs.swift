@@ -33,7 +33,7 @@ class MetDepartmentIDViewModel {
         self.clientProtocol = networkProtocol
     }
 
-    var objectID: Int = 0
+    var objectID: Int = 1
 
     var artID: Int = 0
 

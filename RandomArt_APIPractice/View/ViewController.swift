@@ -39,7 +39,12 @@ class ViewController: UIViewController {
     }
 
     @objc func randomBttnPressed(){
-        metDepartmentIDViewModel.loadArt()
+        if metDepartmentIDViewModel.objectID == 0 {
+            errorAlert(error: "Please select a department")
+        } else {
+            metDepartmentIDViewModel.loadArt()
+        }
+
     }
 
 }
@@ -61,6 +66,7 @@ extension ViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
        print(pickerModels[row].departmentIDForPicker)
         metDepartmentIDViewModel.objectID = pickerModels[row].departmentIDForPicker
+        print(metDepartmentIDViewModel.objectID)
         if metDepartmentIDViewModel.objectID == 0 {
             print("change dat")
         } else {
@@ -91,7 +97,6 @@ extension ViewController: MetDepartmentIDViewModelDelegate {
     func updateObjectIds(with object: ObjectID) {
         if let artID = object.objectIDs.randomElement() {
             metDepartmentIDViewModel.artID = artID
-
         } else {
             errorAlert(error: "Could not generate ID")
         }
